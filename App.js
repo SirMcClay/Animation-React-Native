@@ -1,12 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Animated,
@@ -14,9 +6,25 @@ import {
 } from 'react-native';
 
 const App: React.FC = () => {
+  const ballY = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    Animated.timing(ballY, {
+      toValue: 500,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, []);
+
   return (
    <View style={styles.container}>
-     <View style={styles.ball} />
+     <Animated.View style={[
+        styles.ball,
+        {
+          top: ballY,
+        }
+       ]}
+      />
    </View>
   );
 };
