@@ -3,9 +3,10 @@ import {View, Animated, StyleSheet} from 'react-native';
 
 const App: React.FC = () => {
   const ballY = useRef(new Animated.Value(0)).current;
+  const ballX = useRef(new Animated.Value(0)).current;
   // const ballX = useRef(new Animated.divide(ballY, 2)).current;
   // const ballX = useRef(new Animated.add(ballY, 2)).current;
-  const ballX = useRef(new Animated.multiply(ballY, 2)).current;
+  // const ballX = useRef(new Animated.multiply(ballY, 2)).current;
 
   useEffect(() => {
     // ANIMACAO SIMPLES SECA
@@ -23,11 +24,52 @@ const App: React.FC = () => {
     // }).start();
 
     // ANIMACAO ORGANICA COM VELOCIDADE DEFINIDA ATE PARAR
-    Animated.decay(ballY, {
-      velocity: 0.3,
-      useNativeDriver: false,
-    }).start();
-  }, [ballY]);
+    // Animated.decay(ballY, {
+    //   velocity: 0.3,
+    //   useNativeDriver: false,
+    // }).start();
+
+    // Animated.parallel([
+    // Animated.stagger(100, [
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(ballY, {
+          toValue: 200,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+
+        Animated.delay(200),
+
+        Animated.timing(ballX, {
+          toValue: 200,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+
+        Animated.delay(200),
+
+        Animated.timing(ballY, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+
+        Animated.delay(200),
+
+        Animated.timing(ballX, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+
+        Animated.delay(200),
+      ]),
+      {
+        iterations: 2,
+      },
+    ).start();
+  }, [ballX, ballY]);
 
   return (
     <View style={styles.container}>
