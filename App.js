@@ -3,6 +3,9 @@ import {View, Animated, StyleSheet} from 'react-native';
 
 const App: React.FC = () => {
   const ballY = useRef(new Animated.Value(0)).current;
+  // const ballX = useRef(new Animated.divide(ballY, 2)).current;
+  // const ballX = useRef(new Animated.add(ballY, 2)).current;
+  const ballX = useRef(new Animated.multiply(ballY, 2)).current;
 
   useEffect(() => {
     // ANIMACAO SIMPLES SECA
@@ -21,7 +24,7 @@ const App: React.FC = () => {
 
     // ANIMACAO ORGANICA COM VELOCIDADE DEFINIDA ATE PARAR
     Animated.decay(ballY, {
-      velocity: 1,
+      velocity: 0.3,
       useNativeDriver: false,
     }).start();
   }, [ballY]);
@@ -33,6 +36,7 @@ const App: React.FC = () => {
           styles.ball,
           {
             top: ballY,
+            left: ballX,
           },
         ]}
       />
