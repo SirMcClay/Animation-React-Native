@@ -31,45 +31,51 @@ const App: React.FC = () => {
 
     // Animated.parallel([
     // Animated.stagger(100, [
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(ballY, {
-          toValue: 200,
-          duration: 500,
-          useNativeDriver: false,
-        }),
+    // Animated.loop(
+    //   Animated.sequence([
+    //     Animated.timing(ballY, {
+    //       toValue: 200,
+    //       duration: 500,
+    //       useNativeDriver: false,
+    //     }),
 
-        Animated.delay(200),
+    //     Animated.delay(200),
 
-        Animated.timing(ballX, {
-          toValue: 200,
-          duration: 500,
-          useNativeDriver: false,
-        }),
+    //     Animated.timing(ballX, {
+    //       toValue: 200,
+    //       duration: 500,
+    //       useNativeDriver: false,
+    //     }),
 
-        Animated.delay(200),
+    //     Animated.delay(200),
 
-        Animated.timing(ballY, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: false,
-        }),
+    //     Animated.timing(ballY, {
+    //       toValue: 0,
+    //       duration: 500,
+    //       useNativeDriver: false,
+    //     }),
 
-        Animated.delay(200),
+    //     Animated.delay(200),
 
-        Animated.timing(ballX, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: false,
-        }),
+    //     Animated.timing(ballX, {
+    //       toValue: 0,
+    //       duration: 500,
+    //       useNativeDriver: false,
+    //     }),
 
-        Animated.delay(200),
-      ]),
-      {
-        iterations: 2,
-      },
-    ).start();
-  }, [ballX, ballY]);
+    //     Animated.delay(200),
+    //   ]),
+    //   {
+    //     iterations: 2,
+    //   },
+    // ).start();
+
+    Animated.timing(ballY, {
+      toValue: 500,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [ballY]);
 
   return (
     <View style={styles.container}>
@@ -78,7 +84,14 @@ const App: React.FC = () => {
           styles.ball,
           {
             top: ballY,
-            left: ballX,
+            // left: ballX,
+            opacity: ballY.interpolate({
+              // inputRange: [0, 280, 300],
+              // outputRange: [1, 1, 0],
+              inputRange: [0, 300],
+              outputRange: [1, 0.2],
+              extrapolate: 'clamp',
+            }),
           },
         ]}
       />
