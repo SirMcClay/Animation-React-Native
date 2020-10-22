@@ -1,97 +1,48 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Animated, StyleSheet} from 'react-native';
+import {View, Animated, StyleSheet, PanResponder} from 'react-native';
 
 const App: React.FC = () => {
-  const ballY = useRef(new Animated.Value(0)).current;
-  const ballX = useRef(new Animated.Value(0)).current;
-  // const ballX = useRef(new Animated.divide(ballY, 2)).current;
-  // const ballX = useRef(new Animated.add(ballY, 2)).current;
-  // const ballX = useRef(new Animated.multiply(ballY, 2)).current;
+  const ball = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (e, gestureState) => true,
+      onPanResponderGrant: () => {
+        ball.setOffset({
+          x: ball.x._value,
+          y: ball.y._value,
+        });
+      },
+      onPanResponderMove: Animated.event(
+        [
+          null,
+          {
+            dx: ball.x,
+            dy: ball.y,
+          },
+        ],
+        {
+          useNativeDriver: false,
+          listener: (e, gestureState) => {
+            console.log(gestureState);
+          },
+        },
+      ),
+      onPanResponderRelease: () => {
+        ball.flattenOffset();
+      },
+    }),
+  ).current;
 
-  useEffect(() => {
-    // ANIMACAO SIMPLES SECA
-    // Animated.timing(ballY, {
-    //   toValue: 500,
-    //   duration: 1000,
-    //   useNativeDriver: false,
-    // }).start();
-
-    // ANIMACAO COM ELASTICO BOUNCING
-    // Animated.spring(ballY, {
-    //   toValue: 500,
-    //   bounciness: 20,
-    //   useNativeDriver: false,
-    // }).start();
-
-    // ANIMACAO ORGANICA COM VELOCIDADE DEFINIDA ATE PARAR
-    // Animated.decay(ballY, {
-    //   velocity: 0.3,
-    //   useNativeDriver: false,
-    // }).start();
-
-    // Animated.parallel([
-    // Animated.stagger(100, [
-    // Animated.loop(
-    //   Animated.sequence([
-    //     Animated.timing(ballY, {
-    //       toValue: 200,
-    //       duration: 500,
-    //       useNativeDriver: false,
-    //     }),
-
-    //     Animated.delay(200),
-
-    //     Animated.timing(ballX, {
-    //       toValue: 200,
-    //       duration: 500,
-    //       useNativeDriver: false,
-    //     }),
-
-    //     Animated.delay(200),
-
-    //     Animated.timing(ballY, {
-    //       toValue: 0,
-    //       duration: 500,
-    //       useNativeDriver: false,
-    //     }),
-
-    //     Animated.delay(200),
-
-    //     Animated.timing(ballX, {
-    //       toValue: 0,
-    //       duration: 500,
-    //       useNativeDriver: false,
-    //     }),
-
-    //     Animated.delay(200),
-    //   ]),
-    //   {
-    //     iterations: 2,
-    //   },
-    // ).start();
-
-    Animated.timing(ballY, {
-      toValue: 500,
-      duration: 1000,
-      useNativeDriver: false,
-    }).start();
-  }, [ballY]);
+  // useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
       <Animated.View
+        {...panResponder.panHandlers}
         style={[
           styles.ball,
           {
-            top: ballY,
-            // left: ballX,
-            opacity: ballY.interpolate({
-              // inputRange: [0, 280, 300],
-              // outputRange: [1, 1, 0],
-              inputRange: [0, 300],
-              outputRange: [1, 0.2],
-              extrapolate: 'clamp',
-            }),
+            transform: [{translateX: ball.x}, {translateY: ball.y}],
           },
         ]}
       />
